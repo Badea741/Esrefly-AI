@@ -1,0 +1,6 @@
+@Esrefly_HostAddress = http://localhost:5083
+
+GET {{Esrefly_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
