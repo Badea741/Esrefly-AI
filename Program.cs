@@ -1,3 +1,5 @@
+using Esrefly;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,18 +17,31 @@ var aiAgentOptions = configuration.GetSection("AiAgent").Get<Esrefly.AiAgent.Opt
 builder.Services.AddSingleton<IChatClient>(new OllamaChatClient(aiAgentOptions.Endpoint, aiAgentOptions.ModelName));
 
 
+var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<List<string>>()!;
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.WithOrigins("localhost:5000")
+        builder.WithOrigins([.. allowedOrigins])
                .AllowAnyMethod()
                .AllowAnyHeader()
-        .AllowCredentials(); // Required for SignalR
+        .AllowCredentials();
     });
 });
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseSqlServer(connectionString, option => option.EnableRetryOnFailure())
+.EnableDetailedErrors()
+.EnableSensitiveDataLogging());
+
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
@@ -37,7 +52,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
-//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
