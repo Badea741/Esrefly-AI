@@ -1,0 +1,38 @@
+services:
+  Esrefly:
+    container_name: esrefly_ai
+    image: esrefly_ai:latest
+    build:
+      context: .
+    ports:
+      - 5000:8080
+    networks:
+      - esrefly-ai-network
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on: 
+      - Ollama
+
+  Ollama:
+    container_name: ollama
+    image: ollama/ollama
+    ports:
+      - 14343:14343
+    volumes:
+      - ./run.sh:/bin/run.sh
+    networks:
+      - esrefly-ai-network
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve &
+        sleep 2
+        ollama pull llama3.2:1b
+        tail -f /dev/null
+    restart: on-failure
+    
+    
+
+networks:
+  esrefly-ai-network:    
