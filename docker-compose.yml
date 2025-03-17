@@ -13,6 +13,26 @@ services:
     restart: on-failure
     depends_on: 
       - Ollama
+      - SqlServer 
+  
+  SqlServer:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password123
+    healthcheck: 
+      test: ["NONE","/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "yourStrong(!)Password123","-C", "-Q", "SELECT 1"]
+      interval: 15s
+      timeout: 1m
+      retries: 2
+    volumes:
+      - database-volume:/var/opt/mssql
+    networks:
+      - esrefly-ai-network
+    restart: on-failure
 
   Ollama:
     container_name: ollama
@@ -36,3 +56,6 @@ services:
 
 networks:
   esrefly-ai-network:    
+  
+volumes:
+  database-volume:    
