@@ -1,6 +1,7 @@
 ﻿
 using Esrefly.Features.Incomes.DTOs;
 using Esrefly.Features.Incomes.Services;
+using Esrefly.Features.Shared.Controllers;
 using Esrefly.Features.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace Esrefly.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class IncomesController : ControllerBase
+public class IncomesController : BaseController
 {
     private readonly IIncomeService _incomeService;
 

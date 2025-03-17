@@ -1,6 +1,7 @@
 ﻿
 using Esrefly.Features.Expenses.DTOs;
 using Esrefly.Features.Expenses.Services;
+using Esrefly.Features.Shared.Controllers;
 using Esrefly.Features.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace Esrefly.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExpensesController : ControllerBase
+public class ExpensesController : BaseController
 {
     private readonly IExpenseService _expenseService;
 

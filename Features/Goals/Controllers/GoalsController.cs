@@ -1,15 +1,15 @@
 ﻿
 using Esrefly.Features.Goals.DTOs;
 using Esrefly.Features.Goals.Services;
+using Esrefly.Features.Shared.Controllers;
 using Esrefly.Features.Shared.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Esrefly.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GoalsController : ControllerBase
+public class GoalsController : BaseController
 {
     private readonly IGoalService _goalService;
 

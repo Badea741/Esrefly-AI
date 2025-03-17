@@ -2,6 +2,13 @@
 
 public class User : Entity
 {
+    public User(string externalId, string name, decimal totalBalance = 0)
+    {
+        ExternalId = externalId;
+        Name = name;
+        TotalBalance = totalBalance;
+    }
+
     public string ExternalId { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public decimal TotalBalance { get; init; }

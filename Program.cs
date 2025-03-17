@@ -1,6 +1,9 @@
 using Esrefly;
+using Esrefly.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
+using Npgsql;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +15,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 var configuration = builder.Configuration;
 var aiAgentOptions = configuration.GetSection("AiAgent").Get<Esrefly.AiAgent.Options>()!;
 builder.Services.AddSingleton<IChatClient>(new OllamaChatClient(aiAgentOptions.Endpoint, aiAgentOptions.ModelName));
-
 
 
 builder.Services.AddScoped(typeof(Esrefly.Features.Shared.Repositories.IRepository<>), typeof(Esrefly.Features.Shared.Repositories.Repository<>));
@@ -24,7 +28,7 @@ builder.Services.AddScoped(typeof(Esrefly.Features.Shared.Repositories.IReposito
 builder.Services.AddScoped<Esrefly.Features.Expenses.Services.IExpenseService, Esrefly.Features.Expenses.Services.ExpenseService>();
 builder.Services.AddScoped<Esrefly.Features.Incomes.Services.IIncomeService, Esrefly.Features.Incomes.Services.IncomeService>();
 builder.Services.AddScoped<Esrefly.Features.Goals.Services.IGoalService, Esrefly.Features.Goals.Services.GoalService>();
-
+builder.Services.AddScoped<Esrefly.Features.User.Read.IQueryService, Esrefly.Features.User.Read.QueryService>();
 
 var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<List<string>>()!;
 builder.Services.AddCors(options =>
@@ -45,6 +49,12 @@ options.UseNpgsql(connectionString, option => option.EnableRetryOnFailure())
 .EnableSensitiveDataLogging());
 
 
+builder.Services.AddScoped(provider =>
+{
+    return new NpgsqlConnection(connectionString);
+});
+
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -56,6 +66,7 @@ using (var scope = app.Services.CreateScope())
 app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 
+app.UseGlobalExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -63,8 +74,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+
 app.MapControllers();
 app.MapHub<Esrefly.AiAgent.CommunicationHub>("/agent");
-
 
 app.Run();
