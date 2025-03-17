@@ -3,16 +3,16 @@ using System;
 using Esrefly;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Esrefly.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250315220134_Init")]
+    [Migration("20250317211757_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -21,31 +21,31 @@ namespace Esrefly.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Expense", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("UserId1")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -60,30 +60,30 @@ namespace Esrefly.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<int>("DeductedRatio")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Progress")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("UserId1")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -98,23 +98,23 @@ namespace Esrefly.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("IncomeType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("UserId1")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -129,18 +129,18 @@ namespace Esrefly.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ExternalId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("TotalBalance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -152,33 +152,33 @@ namespace Esrefly.Migrations
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Expense", b =>
                 {
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany("Expenses")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
+                        .WithMany("Expenses")
                         .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Goal", b =>
                 {
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany("Goals")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
+                        .WithMany("Goals")
                         .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Income", b =>
                 {
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany("Incomes")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
+                        .WithMany("Incomes")
                         .HasForeignKey("UserId1");
                 });
 

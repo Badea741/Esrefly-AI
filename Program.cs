@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"Connection String: {connectionString}");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(connectionString, option => option.EnableRetryOnFailure())
+options.UseNpgsql(connectionString, option => option.EnableRetryOnFailure())
 .EnableDetailedErrors()
 .EnableSensitiveDataLogging());
 
