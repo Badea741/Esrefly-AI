@@ -17,6 +17,15 @@ var aiAgentOptions = configuration.GetSection("AiAgent").Get<Esrefly.AiAgent.Opt
 builder.Services.AddSingleton<IChatClient>(new OllamaChatClient(aiAgentOptions.Endpoint, aiAgentOptions.ModelName));
 
 
+
+builder.Services.AddScoped(typeof(Esrefly.Features.Shared.Repositories.IRepository<>), typeof(Esrefly.Features.Shared.Repositories.Repository<>));
+builder.Services.AddScoped<Esrefly.Features.Expenses.Services.IExpenseService, Esrefly.Features.Expenses.Services.ExpenseService>();
+builder.Services.AddScoped(typeof(Esrefly.Features.Shared.Repositories.IRepository<>), typeof(Esrefly.Features.Shared.Repositories.Repository<>));
+builder.Services.AddScoped<Esrefly.Features.Expenses.Services.IExpenseService, Esrefly.Features.Expenses.Services.ExpenseService>();
+builder.Services.AddScoped<Esrefly.Features.Incomes.Services.IIncomeService, Esrefly.Features.Incomes.Services.IncomeService>();
+builder.Services.AddScoped<Esrefly.Features.Goals.Services.IGoalService, Esrefly.Features.Goals.Services.GoalService>();
+
+
 var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<List<string>>()!;
 builder.Services.AddCors(options =>
 {
