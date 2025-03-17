@@ -29,10 +29,10 @@ docker logs ollama --follow
 ### Step 2: Start the Communicating Server
 The server uses **SignalR** for real-time communication. Ensure you have the **SignalR** package installed to connect to the server.
 
-Run the following command to start the Esrefly server:
+Run the following command to start the Esrefly server and sql server database:
 
 ```sh
-docker compose up -d Esrefly
+docker compose up -d
 ```
 
 The server will listen on **port 5000**, and the SignalR endpoint is:
