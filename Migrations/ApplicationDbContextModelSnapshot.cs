@@ -44,14 +44,14 @@ namespace Esrefly.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Goal", b =>
@@ -80,14 +80,14 @@ namespace Esrefly.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goals", (string)null);
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Income", b =>
@@ -113,14 +113,14 @@ namespace Esrefly.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Incomes");
+                    b.ToTable("Incomes", (string)null);
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.User", b =>
@@ -145,28 +145,40 @@ namespace Esrefly.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Expense", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Expenses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Goal", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Goals")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Income", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Incomes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.User", b =>

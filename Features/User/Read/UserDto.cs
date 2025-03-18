@@ -14,6 +14,7 @@ public record UserDto
 
 public record ExpenseDto
 {
+    public Guid Id { get; init; }
     public string Description { get; init; } = string.Empty;
     public decimal Amount { get; init; }
     public string? Category { get; init; }
@@ -21,6 +22,7 @@ public record ExpenseDto
 
 public record IncomeDto
 {
+    public Guid Id { get; init; }
     public string Description { get; init; } = string.Empty;
     public decimal Amount { get; init; }
     public string IncomeType { get; init; } = string.Empty;
@@ -28,6 +30,7 @@ public record IncomeDto
 
 public record GoalDto
 {
+    public Guid Id { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
     public decimal Amount { get; init; }

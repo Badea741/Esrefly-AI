@@ -9,13 +9,6 @@ public class UserConfiguration : IEntityTypeConfiguration<Entities.User>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasMany<Entities.Income>().WithOne()
-            .HasForeignKey("UserId");
-        builder.HasMany<Entities.Expense>().WithOne()
-            .HasForeignKey("UserId");
-        builder.HasMany<Entities.Goal>().WithOne()
-            .HasForeignKey("UserId");
-
-        builder.HasIndex(x => x.ExternalId);
+        builder.HasIndex(x => x.ExternalId).IsUnique();
     }
 }
