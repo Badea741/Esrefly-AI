@@ -5,6 +5,7 @@ public class Expense : Entity
     public string Description { get; set; } = string.Empty;
     public decimal Amount { get; set; }
     public string? Category { get; set; }
+    public DateOnly TransactionDate { get; set; } 
     public User User { get; set; } = default!;
     public Guid UserId { get; set; }
 }

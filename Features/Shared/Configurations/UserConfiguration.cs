@@ -9,6 +9,6 @@ public class UserConfiguration : IEntityTypeConfiguration<Entities.User>
     {
         builder.HasKey(x => x.Id);
 
-        builder.HasIndex(x => x.ExternalId);
+        builder.HasIndex(x => x.ExternalId).IsUnique();
     }
 }

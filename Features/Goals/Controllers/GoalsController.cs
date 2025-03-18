@@ -29,7 +29,8 @@ public class GoalsController : BaseController
             Description = g.Description,
             Amount = g.Amount,
             DeductedRatio = g.DeductedRatio,
-            Progress = g.Progress
+            Progress = g.Progress,
+            CreatedDate = g.CreatedDate
         }).ToList();
 
         return Ok(goalDtos);
@@ -46,7 +47,8 @@ public class GoalsController : BaseController
             Description = g.Description,
             Amount = g.Amount,
             DeductedRatio = g.DeductedRatio,
-            Progress = g.Progress
+            Progress = g.Progress,
+            CreatedDate = g.CreatedDate
         }).ToList();
 
         return Ok(goalDtos);
@@ -67,7 +69,8 @@ public class GoalsController : BaseController
             Description = goal.Description,
             Amount = goal.Amount,
             DeductedRatio = goal.DeductedRatio,
-            Progress = goal.Progress
+            Progress = goal.Progress,
+            CreatedDate = goal.CreatedDate
         };
 
         return Ok(goalDto);
@@ -85,7 +88,8 @@ public class GoalsController : BaseController
                 Description = createGoalDto.Description,
                 Amount = createGoalDto.Amount,
                 DeductedRatio = createGoalDto.DeductedRatio,
-                Progress = 0 // Initialize progress to 0
+                Progress = 0, // Initialize progress to 0
+              
             };
 
             var createdGoal = await _goalService.CreateGoalAsync(goal, createGoalDto.UserId);
@@ -121,6 +125,7 @@ public class GoalsController : BaseController
         existingGoal.Amount = updateGoalDto.Amount;
         existingGoal.DeductedRatio = updateGoalDto.DeductedRatio;
         existingGoal.Progress = updateGoalDto.Progress;
+
 
         var success = await _goalService.UpdateGoalAsync(existingGoal);
 
