@@ -17,7 +17,23 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
+
+       
+        modelBuilder.Entity<Income>()
+            .Property(e => e.TransactionDate)
+            .HasConversion(
+                dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
+                dateTime => DateOnly.FromDateTime(dateTime)
+            );
+
+        modelBuilder.Entity<Expense>()
+            .Property(e => e.TransactionDate)
+            .HasConversion(
+                dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc),
+                dateTime => DateOnly.FromDateTime(dateTime)
+            );
+
+  
     }
 }

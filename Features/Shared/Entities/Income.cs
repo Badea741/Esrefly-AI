@@ -4,11 +4,7 @@ public class Income : Entity
 {
     public string Description { get; set; } = string.Empty;
     public decimal Amount { get; set; }
-    public IncomeType IncomeType { get; set; } = IncomeType.Fixed;
+    public string IncomeType { get; set; } = "Fixed";
+    public DateOnly TransactionDate { get; set; }
 }
 
-public enum IncomeType
-{
-    Recurring,
-    Fixed
-}

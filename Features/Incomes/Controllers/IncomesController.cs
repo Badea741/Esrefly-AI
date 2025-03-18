@@ -27,7 +27,9 @@ public class IncomesController : BaseController
             Id = i.Id,
             Description = i.Description,
             Amount = i.Amount,
-            IncomeType = i.IncomeType
+            IncomeType = i.IncomeType,
+            CreatedDate = i.CreatedDate,
+            TransactionDate = i.TransactionDate
         }).ToList();
 
         return Ok(incomeDtos);
@@ -42,7 +44,9 @@ public class IncomesController : BaseController
             Id = i.Id,
             Description = i.Description,
             Amount = i.Amount,
-            IncomeType = i.IncomeType
+            IncomeType = i.IncomeType,
+            CreatedDate = i.CreatedDate,
+            TransactionDate = i.TransactionDate
         }).ToList();
 
         return Ok(incomeDtos);
@@ -61,7 +65,9 @@ public class IncomesController : BaseController
             Id = income.Id,
             Description = income.Description,
             Amount = income.Amount,
-            IncomeType = income.IncomeType
+            IncomeType = income.IncomeType,
+            CreatedDate = income.CreatedDate,
+            TransactionDate = income.TransactionDate
         };
 
         return Ok(incomeDto);
@@ -77,7 +83,8 @@ public class IncomesController : BaseController
                 Id = Guid.NewGuid(),
                 Description = createIncomeDto.Description,
                 Amount = createIncomeDto.Amount,
-                IncomeType = createIncomeDto.IncomeType
+                IncomeType = createIncomeDto.IncomeType,
+                TransactionDate = createIncomeDto.TransactionDate
             };
 
             var createdIncome = await _incomeService.CreateIncomeAsync(income, createIncomeDto.UserId);
@@ -87,7 +94,9 @@ public class IncomesController : BaseController
                 Id = createdIncome.Id,
                 Description = createdIncome.Description,
                 Amount = createdIncome.Amount,
-                IncomeType = createdIncome.IncomeType
+                IncomeType = createdIncome.IncomeType,
+                CreatedDate = createdIncome.CreatedDate,
+                TransactionDate = createdIncome.TransactionDate
             };
 
             return CreatedAtAction(nameof(GetIncome), new { id = incomeDto.Id }, incomeDto);
@@ -106,17 +115,22 @@ public class IncomesController : BaseController
         if (existingIncome == null)
             return NotFound();
 
+       
         existingIncome.Description = updateIncomeDto.Description;
         existingIncome.Amount = updateIncomeDto.Amount;
         existingIncome.IncomeType = updateIncomeDto.IncomeType;
+        existingIncome.TransactionDate = updateIncomeDto.TransactionDate;
 
+       
         var success = await _incomeService.UpdateIncomeAsync(existingIncome);
 
         if (!success)
             return NotFound();
 
-        return NoContent();
+       
+        return Ok(existingIncome);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIncome(Guid id)

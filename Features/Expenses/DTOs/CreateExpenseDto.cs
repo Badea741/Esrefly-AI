@@ -6,4 +6,5 @@ public class CreateExpenseDto
     public decimal Amount { get; set; }
     public string? Category { get; set; }
     public Guid UserId { get; set; }
+    public DateOnly TransactionDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow); 
 }
