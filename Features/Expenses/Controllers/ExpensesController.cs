@@ -4,24 +4,19 @@ using Esrefly.Features.Expenses.Services;
 using Esrefly.Features.Shared.Controllers;
 using Esrefly.Features.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.AI;
+using Newtonsoft.Json;
 
 namespace Esrefly.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExpensesController : BaseController
+public class ExpensesController(IExpenseService expenseService, IChatClient chatClient) : BaseController
 {
-    private readonly IExpenseService _expenseService;
-
-    public ExpensesController(IExpenseService expenseService)
-    {
-        _expenseService = expenseService;
-    }
-
     [HttpGet]
     public async Task<ActionResult<List<ExpenseDto>>> GetAllExpenses()
     {
-        var expenses = await _expenseService.GetAllExpensesAsync();
+        var expenses = await expenseService.GetAllExpensesAsync();
         var expenseDtos = expenses.Select(e => new ExpenseDto
         {
             Id = e.Id,
@@ -36,7 +31,7 @@ public class ExpensesController : BaseController
     [HttpGet("user/{userId}")]
     public async Task<ActionResult<List<ExpenseDto>>> GetUserExpenses(Guid userId)
     {
-        var expenses = await _expenseService.GetUserExpensesAsync(userId);
+        var expenses = await expenseService.GetUserExpensesAsync(userId);
         var expenseDtos = expenses.Select(e => new ExpenseDto
         {
             Id = e.Id,
@@ -51,7 +46,7 @@ public class ExpensesController : BaseController
     [HttpGet("{id}")]
     public async Task<ActionResult<ExpenseDto>> GetExpense(Guid id)
     {
-        var expense = await _expenseService.GetExpenseByIdAsync(id);
+        var expense = await expenseService.GetExpenseByIdAsync(id);
 
         if (expense == null)
             return NotFound();
@@ -80,7 +75,20 @@ public class ExpensesController : BaseController
                 Category = createExpenseDto.Category
             };
 
-            var createdExpense = await _expenseService.CreateExpenseAsync(expense, createExpenseDto.UserId);
+            if (expense.Category is null)
+            {
+                ChatMessage[] categoryChatMessage =
+                    [new ChatMessage(ChatRole.System,$"Give a general, " +
+                    $"concise categorization to the following expense: {expense.Description}"),
+                new ChatMessage(ChatRole.Assistant,$"use the following categories: " +$"Food, Housing, Utilities, " +
+                    $"Home Appliances, Transportation, Healthcare, Entertainment, Clothing, Education," +
+                    $" Insurance, Personal, Debt, Savings, Travel"),
+                new ChatMessage(ChatRole.Assistant,$"You must give an answer")];
+                var response = await chatClient.GetResponseAsync<ChatCategoryResponse>(categoryChatMessage);
+                expense.Category = JsonConvert.DeserializeObject<ChatCategoryResponse>(response.Text).Data.ToString();
+            }
+
+            var createdExpense = await expenseService.CreateExpenseAsync(expense, createExpenseDto.UserId);
 
             var expenseDto = new ExpenseDto
             {
@@ -101,7 +109,7 @@ public class ExpensesController : BaseController
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateExpense(Guid id, UpdateExpenseDto updateExpenseDto)
     {
-        var existingExpense = await _expenseService.GetExpenseByIdAsync(id);
+        var existingExpense = await expenseService.GetExpenseByIdAsync(id);
 
         if (existingExpense == null)
             return NotFound();
@@ -110,7 +118,20 @@ public class ExpensesController : BaseController
         existingExpense.Amount = updateExpenseDto.Amount;
         existingExpense.Category = updateExpenseDto.Category;
 
-        var success = await _expenseService.UpdateExpenseAsync(existingExpense);
+        if (updateExpenseDto.Category is null)
+        {
+            ChatMessage[] categoryChatMessage =
+                    [new ChatMessage(ChatRole.System,$"Give a general, " +
+                    $"concise categorization to the following expense: {existingExpense.Description}"),
+                new ChatMessage(ChatRole.Assistant,$"use the following categories: " +$"Food, Housing, Utilities, " +
+                    $"Home Appliances, Transportation, Healthcare, Entertainment, Clothing, Education," +
+                    $" Insurance, Personal, Debt, Savings, Travel"),
+                new ChatMessage(ChatRole.Assistant,$"You must give an answer")];
+            var response = await chatClient.GetResponseAsync<ChatCategoryResponse>(categoryChatMessage);
+            existingExpense.Category = JsonConvert.DeserializeObject<ChatCategoryResponse>(response.Text).Data.ToString();
+        }
+
+        var success = await expenseService.UpdateExpenseAsync(existingExpense);
 
         if (!success)
             return NotFound();
@@ -121,7 +142,7 @@ public class ExpensesController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteExpense(Guid id)
     {
-        var success = await _expenseService.DeleteExpenseAsync(id);
+        var success = await expenseService.DeleteExpenseAsync(id);
 
         if (!success)
             return NotFound();
