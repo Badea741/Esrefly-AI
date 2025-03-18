@@ -13,7 +13,7 @@ public class User : Entity
     public string Name { get; init; } = string.Empty;
     public decimal TotalBalance { get; init; }
 
-    public ICollection<Income> Incomes { get; set; } = [];
-    public ICollection<Expense> Expenses { get; set; } = [];
-    public ICollection<Goal> Goals { get; set; } = [];
+    public virtual ICollection<Income> Incomes { get; set; } = [];
+    public virtual ICollection<Expense> Expenses { get; set; } = [];
+    public virtual ICollection<Goal> Goals { get; set; } = [];
 }
