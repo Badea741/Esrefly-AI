@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Esrefly.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250317211757_Init")]
+    [Migration("20250318224520_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -41,17 +41,12 @@ namespace Esrefly.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("UserId1")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Expenses");
                 });
@@ -79,17 +74,12 @@ namespace Esrefly.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("UserId1")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Goals");
                 });
@@ -110,17 +100,12 @@ namespace Esrefly.Migrations
                     b.Property<int>("IncomeType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("UserId1")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Incomes");
                 });
@@ -151,35 +136,35 @@ namespace Esrefly.Migrations
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Expense", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Expenses")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Goal", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Goals")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.Income", b =>
                 {
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Esrefly.Features.Shared.Entities.User", null)
+                    b.HasOne("Esrefly.Features.Shared.Entities.User", "User")
                         .WithMany("Incomes")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Esrefly.Features.Shared.Entities.User", b =>

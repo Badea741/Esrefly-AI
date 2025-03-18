@@ -18,6 +18,10 @@ public class QueryService(NpgsqlConnection connection) : IQueryService
                 await File.ReadAllTextAsync(Path.Combine(_basePath, "Features", "User", "Read", "Query.sql"), cancellationToken);
 
             var userDictionary = new Dictionary<Guid, UserDto>();
+            var expensesDictionary = new Dictionary<Guid, ExpenseDto>();
+            var incomeDictionary = new Dictionary<Guid, IncomeDto>();
+            var goalDictionary = new Dictionary<Guid, GoalDto>();
+
             var result = connection.Query<UserDto, ExpenseDto, IncomeDto, GoalDto, UserDto>(sqlQuery,
                 (user, expense, income, goal) =>
                 {
@@ -27,17 +31,29 @@ public class QueryService(NpgsqlConnection connection) : IQueryService
                         userDictionary.Add(user.Id, user);
 
                     if (expense != null && !string.IsNullOrEmpty(expense.Description))
-                        user.Expenses.Add(expense);
+                        if (!expensesDictionary.TryGetValue(expense.Id, out var _))
+                        {
+                            user.Expenses.Add(expense);
+                            expensesDictionary.Add(expense.Id, expense);
+                        }
 
                     if (income != null && !string.IsNullOrEmpty(income.Description))
-                        user.Incomes.Add(income);
+                        if (!incomeDictionary.TryGetValue(income.Id, out var _))
+                        {
+                            user.Incomes.Add(income);
+                            incomeDictionary.Add(income.Id, income);
+                        }
 
                     if (goal != null && !string.IsNullOrEmpty(goal.Title))
-                        user.Goals.Add(goal);
+                        if (!goalDictionary.TryGetValue(goal.Id, out var _))
+                        {
+                            user.Goals.Add(goal);
+                            goalDictionary.Add(goal.Id, goal);
+                        }
 
                     return user;
                 },
-                new { query.ExternalId }, splitOn: "Description,Description,Title");
+                new { query.ExternalId }, splitOn: "Id,Id,Id");
             return result.FirstOrDefault();
         }
         catch (Exception ex)

@@ -33,8 +33,7 @@ namespace Esrefly.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Category = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,12 +42,8 @@ namespace Esrefly.Migrations
                         name: "FK_Expenses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Expenses_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,8 +56,7 @@ namespace Esrefly.Migrations
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     DeductedRatio = table.Column<int>(type: "integer", nullable: false),
                     Progress = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,12 +65,8 @@ namespace Esrefly.Migrations
                         name: "FK_Goals_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Goals_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,8 +77,7 @@ namespace Esrefly.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     IncomeType = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,12 +86,8 @@ namespace Esrefly.Migrations
                         name: "FK_Incomes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Incomes_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -111,29 +96,14 @@ namespace Esrefly.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Expenses_UserId1",
-                table: "Expenses",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Goals_UserId",
                 table: "Goals",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Goals_UserId1",
-                table: "Goals",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Incomes_UserId",
                 table: "Incomes",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Incomes_UserId1",
-                table: "Incomes",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ExternalId",
