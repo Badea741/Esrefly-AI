@@ -22,7 +22,9 @@ public class ExpensesController(IExpenseService expenseService, IChatClient chat
             Id = e.Id,
             Description = e.Description,
             Amount = e.Amount,
-            Category = e.Category
+            Category = e.Category,
+            CreatedDate = e.CreatedDate,
+            TransactionDate = e.TransactionDate
         }).ToList();
 
         return Ok(expenseDtos);
@@ -37,7 +39,9 @@ public class ExpensesController(IExpenseService expenseService, IChatClient chat
             Id = e.Id,
             Description = e.Description,
             Amount = e.Amount,
-            Category = e.Category
+            Category = e.Category,
+            CreatedDate = e.CreatedDate,
+            TransactionDate = e.TransactionDate
         }).ToList();
 
         return Ok(expenseDtos);
@@ -56,7 +60,9 @@ public class ExpensesController(IExpenseService expenseService, IChatClient chat
             Id = expense.Id,
             Description = expense.Description,
             Amount = expense.Amount,
-            Category = expense.Category
+            Category = expense.Category,
+            CreatedDate = expense.CreatedDate,
+            TransactionDate = expense.TransactionDate
         };
 
         return Ok(expenseDto);
@@ -72,7 +78,8 @@ public class ExpensesController(IExpenseService expenseService, IChatClient chat
                 Id = Guid.NewGuid(),
                 Description = createExpenseDto.Description,
                 Amount = createExpenseDto.Amount,
-                Category = createExpenseDto.Category
+                Category = createExpenseDto.Category,
+                TransactionDate = createExpenseDto.TransactionDate
             };
 
             if (expense.Category is null)
@@ -95,7 +102,9 @@ public class ExpensesController(IExpenseService expenseService, IChatClient chat
                 Id = createdExpense.Id,
                 Description = createdExpense.Description,
                 Amount = createdExpense.Amount,
-                Category = createdExpense.Category
+                Category = createdExpense.Category,
+                CreatedDate = createdExpense.CreatedDate,
+                TransactionDate = createdExpense.TransactionDate
             };
 
             return CreatedAtAction(nameof(GetExpense), new { id = expenseDto.Id }, expenseDto);
