@@ -1,6 +1,5 @@
 ﻿using Esrefly.Features.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Esrefly;
 
@@ -14,12 +13,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<Income> Incomes { get; set; }
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<Goal> Goals { get; set; }
-
+    public DbSet<Prompt> Prompts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-       
+
         modelBuilder.Entity<Income>()
             .Property(e => e.TransactionDate)
             .HasConversion(
@@ -34,6 +33,6 @@ public class ApplicationDbContext : DbContext
                 dateTime => DateOnly.FromDateTime(dateTime)
             );
 
-  
+
     }
 }
