@@ -16,4 +16,5 @@ public class User : Entity
     public virtual ICollection<Income> Incomes { get; set; } = [];
     public virtual ICollection<Expense> Expenses { get; set; } = [];
     public virtual ICollection<Goal> Goals { get; set; } = [];
+    public virtual ICollection<Prompt> Prompts { get; set; } = [];
 }
