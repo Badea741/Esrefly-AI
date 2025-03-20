@@ -24,7 +24,7 @@ public class Handler(ApplicationDbContext context) : IRequestHandler<Query, IEnu
                 Response = x.Response,
                 CreatedDate = x.CreatedDate
             }).ToList()
-        });
+        }).OrderByDescending(x => x.CreatedDate);
 
         return result;
     }
